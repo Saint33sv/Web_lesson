@@ -34,11 +34,34 @@
         flex: 1;
       }
     </style>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function(){
+        let btn = document.querySelector("input[type=submit]");
+        btn.addEventListener("click", async function(event){
+          event.preventDefault();
+          let username = document.querySelector("input[name=username]").value;
+          let password = document.querySelector("input[name=password]").value;
+          let response = await fetch("/login", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json;charset=utf-8'},
+            //body: new FormData(document.querySelector('form')) передача данных как данные формы
+            body: `{"username": "${username}", "password": "${password}"}`
+          });
+          let response_json = await response.json();
+          if (response_json.success){
+            let body = document.querySelector("body");
+            body.style.backgroundColor = "white";
+            body.style.display = "block";
+            body.innerHTML = response_json.message
+          }
+        })
+      })
+    </script>
   </head>
   <body>
     <div class="placeholder"></div>
     <form method="POST" action="/login">
-      <input type="text" name="login">
+      <input type="text" name="username">
       <input type="password" name="password">
       <input type="submit" value="Войти">
     </form>
